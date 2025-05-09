@@ -1,19 +1,24 @@
-<?php
+-- ********************************************************
+-- Version:       Date:       Author:           
+-- ********       ****        *******         
+-- 01             05-09-2025  Thomas Tadesse
+-- ********************************************************
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\DB;
+CREATE DATABASE IF NOT EXISTS `rijschool` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
+USE `rijschool`;
+-- --------------------------------------------------------
 
-return new class extends Migration
-{
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
-    {
-        DB::unprepared('
-        DROP PROCEDURE IF EXISTS sp_getAllInstructeurs;
+-- Step 01:
+-- Goal: Create new Data
+-- ********************************************************
+-- Version:       Date:       Author:           Description
+-- ********       ****        *******           ***********
+-- 01             05-09-2025  Thomas Tadesse	New Stored Procedures
+-- ********************************************************
+
+
+DELIMITER $$
+ DROP PROCEDURE IF EXISTS sp_getAllInstructeurs;
             CREATE PROCEDURE sp_getAllInstructeurs()
             BEGIN
                 SELECT
@@ -29,11 +34,11 @@ return new class extends Migration
                     is_actief = 1
                 ORDER BY
                     aantal_sterren DESC;
-            END
-        ');
+            END$$
+DELIMITER ;
 
-        DB::unprepared('
-        DROP PROCEDURE IF EXISTS sp_getVoertuigDetails;
+DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_getVoertuigDetails;
             CREATE PROCEDURE sp_getVoertuigDetails(IN vehicleId INT)
             BEGIN
                 SELECT
@@ -52,11 +57,11 @@ return new class extends Migration
                     AND (vehicleId IS NULL OR voer.id = vehicleId)
                 ORDER BY
                     tvrtg.rijbewijscategorie ASC;
-            END
-        ');
+            END$$
+DELIMITER ;
 
-        DB::unprepared('
-        DROP PROCEDURE IF EXISTS sp_getAllAvailableVoertuigen;
+DELIMITER $$
+ DROP PROCEDURE IF EXISTS sp_getAllAvailableVoertuigen;
             CREATE PROCEDURE sp_getAllAvailableVoertuigen()
             BEGIN
                 SELECT
@@ -74,11 +79,11 @@ return new class extends Migration
                     voer.is_actief = 1
                 ORDER BY
                     tvrtg.rijbewijscategorie ASC;
-            END
-        ');
-        
-        DB::unprepared('
-        DROP PROCEDURE IF EXISTS sp_updateVoertuig;
+            END$$
+DELIMITER ;
+
+DELIMITER $$
+ DROP PROCEDURE IF EXISTS sp_updateVoertuig;
             CREATE PROCEDURE sp_updateVoertuig(
                 IN p_voertuig_id INT,
                 IN p_instructeur_id INT,
@@ -116,18 +121,5 @@ return new class extends Migration
                     VALUES
                         (p_voertuig_id, p_instructeur_id, CURRENT_DATE(), 1);
                 END IF;
-            END
-        ');
-    }
-
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
-    {
-        DB::unprepared('DROP PROCEDURE IF EXISTS sp_getAllInstructeurs');
-        DB::unprepared('DROP PROCEDURE IF EXISTS sp_getVoertuigDetails');
-        DB::unprepared('DROP PROCEDURE IF EXISTS sp_getAllAvailableVoertuigen');
-        DB::unprepared('DROP PROCEDURE IF EXISTS sp_updateVoertuig');
-    }
-};
+            END$$
+DELIMITER ;
