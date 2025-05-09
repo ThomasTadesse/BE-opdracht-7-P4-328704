@@ -10,7 +10,7 @@ class VoertuigInstructeur extends Model
 
     protected $table = 'voertuig_instructeur';
 
-    private $primaryKey = 'id';
+    public $primaryKey = 'id';
 
     protected $fillable = [
         'voertuig_id',

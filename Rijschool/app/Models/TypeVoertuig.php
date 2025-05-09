@@ -8,7 +8,7 @@ class TypeVoertuig extends Model
 {
     public $timestamps = false;
 
-    private $primaryKey = 'id';
+    public $primaryKey = 'id';
 
     protected $fillable = [
         'type_voertuig',

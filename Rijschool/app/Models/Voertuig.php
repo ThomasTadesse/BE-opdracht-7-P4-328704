@@ -20,7 +20,7 @@ class Voertuig extends Model
 
     public $timestamps = false;
     
-    private $primaryKey = 'id';
+    public $primaryKey = 'id';
 
     public function typeVoertuig()
     {
