@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // TypeVoertuigen
-        Schema::create('type_voertuigen', function (Blueprint $table) {
+        // TypeVoertuig
+        Schema::create('TypeVoertuig', function (Blueprint $table) {
             $table->id();
             $table->string('type_voertuig', 50);
             $table->string('rijbewijscategorie', 5);
@@ -23,7 +23,7 @@ return new class extends Migration
         });
 
         // Instructeurs
-        Schema::create('instructeurs', function (Blueprint $table) {
+        Schema::create('Instructeurs', function (Blueprint $table) {
             $table->id();
             $table->string('voornaam', 50);
             $table->string('tussenvoegsel', 20)->nullable();
@@ -38,7 +38,7 @@ return new class extends Migration
         });
 
         // Voertuigen
-        Schema::create('voertuigen', function (Blueprint $table) {
+        Schema::create('Voertuigen', function (Blueprint $table) {
             $table->id();
             $table->foreignId('type_voertuig_id')->constrained('type_voertuigen');
             $table->string('kentkenen', 8);
@@ -52,7 +52,7 @@ return new class extends Migration
         });
 
         // VoertuigInstructeur
-        Schema::create('voertuig_instructeur', function (Blueprint $table) {
+        Schema::create('VoertuigInstructeurs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('voertuig_id')->constrained('voertuigen');
             $table->foreignId('instructeur_id')->constrained('instructeurs');

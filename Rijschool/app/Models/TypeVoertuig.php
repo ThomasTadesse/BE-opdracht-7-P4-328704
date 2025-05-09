@@ -2,25 +2,25 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class TypeVoertuig extends Model
 {
-    public $timestamps = false;
+    use HasFactory;
 
-    public $primaryKey = 'id';
+    protected $table = 'TypeVoertuig';
+    public $timestamps = false;
 
     protected $fillable = [
         'type_voertuig',
         'rijbewijscategorie',
         'is_actief',
         'opmerking',
-        'datum_aangemaakt',
-        'datum_gewijzigd',
     ];
 
     public function voertuigen()
     {
-        return $this->hasMany(Voertuig::class);
+        return $this->hasMany(Voertuig::class, 'type_voertuig_id');
     }
 }

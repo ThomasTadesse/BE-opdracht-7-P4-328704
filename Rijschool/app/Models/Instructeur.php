@@ -2,13 +2,15 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Instructeur extends Model
 {
-    public $timestamps = false;
+    use HasFactory;
 
-    public $primaryKey = 'id';
+    protected $table = 'Instructeurs';
+    public $timestamps = false;
 
     protected $fillable = [
         'voornaam',
@@ -19,13 +21,11 @@ class Instructeur extends Model
         'aantal_sterren',
         'is_actief',
         'opmerking',
-        'datum_aangemaakt',
-        'datum_gewijzigd',
     ];
 
     public function voertuigen()
     {
-        return $this->belongsToMany(Voertuig::class, 'voertuig_instructeur')
-                    ->withPivot(['datum_toekenning', 'is_actief', 'opmerking', 'datum_aangemaakt', 'datum_gewijzigd']);
+        return $this->belongsToMany(Voertuig::class, 'VoertuigInstructeurs', 'instructeur_id', 'voertuig_id')
+                    ->withPivot('datum_toekenning', 'is_actief', 'opmerking');
     }
 }
