@@ -12,26 +12,19 @@ Route::get('/', function () {
 })->name('home');
 
 // resource instructeur
-Route::resource('instructeur', InstructeurController::class)
-    ->parameters(['instructeur' => 'instructeur'])
-    ->names([
-        'index' => 'instructeur.index',
-        'create' => 'instructeur.create',
-        'store' => 'instructeur.store',
-        'show' => 'instructeur.show',
-        'edit' => 'instructeur.edit',
-        'update' => 'instructeur.update',
-        'destroy' => 'instructeur.destroy'
-    ]);
+Route::get('/instructeur', [InstructeurController::class, 'index'])->name('instructeur.index');
+Route::get('/instructeur/create', [InstructeurController::class, 'create'])->name('instructeur.create');
+Route::post('/instructeur', [InstructeurController::class, 'store'])->name('instructeur.store');
+Route::get('/instructeur/{instructeur}', [InstructeurController::class, 'show'])->name('instructeur.show');
+Route::get('/instructeur/{instructeur}/edit', [InstructeurController::class, 'edit'])->name('instructeur.edit');
+Route::put('/instructeur/{instructeur}', [InstructeurController::class, 'update'])->name('instructeur.update');
+Route::delete('/instructeur/{instructeur}', [InstructeurController::class, 'destroy'])->name('instructeur.destroy');
+
 // resource voertuig
-Route::resource('voertuig', VoertuigController::class)
-    ->parameters(['voertuig' => 'voertuig'])
-    ->names([
-        'index' => 'voertuig.index',
-        'create' => 'voertuig.create',
-        'store' => 'voertuig.store',
-        'show' => 'voertuig.show',
-        'edit' => 'voertuig.edit',
-        'update' => 'voertuig.update',
-        'destroy' => 'voertuig.destroy'
-    ]);
+Route::get('/voertuig', [VoertuigController::class, 'index'])->name('voertuig.index');
+Route::get('/voertuig/create', [VoertuigController::class, 'create'])->name('voertuig.create');
+Route::post('/voertuig', [VoertuigController::class, 'store'])->name('voertuig.store');
+Route::get('/voertuig/{voertuig}', [VoertuigController::class, 'show'])->name('voertuig.show');
+Route::get('/voertuig/{voertuig}/edit', [VoertuigController::class, 'edit'])->name('voertuig.edit');
+Route::put('/voertuig/{voertuig}', [VoertuigController::class, 'update'])->name('voertuig.update');
+Route::delete('/voertuig/{voertuig}', [VoertuigController::class, 'destroy'])->name('voertuig.destroy');
