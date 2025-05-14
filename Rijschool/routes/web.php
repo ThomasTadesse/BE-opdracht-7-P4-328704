@@ -5,10 +5,6 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Arr;
 
 Route::get('/', function () {
-    return view('welcome');
-})->name('welcome');
-
-Route::get('/home', function () {
     return view('home');
 })->name('home');
 
