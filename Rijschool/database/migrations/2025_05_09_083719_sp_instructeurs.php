@@ -62,6 +62,7 @@ return new class extends Migration
             CREATE PROCEDURE sp_getAllAvailableVoertuigen()
             BEGIN
                 SELECT
+                    voer.id,
                     tvrtg.type_voertuig,
                     voer.type,
                     voer.kentkenen,
