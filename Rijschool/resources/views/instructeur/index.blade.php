@@ -3,6 +3,7 @@
         Welkom, Praktijkmanagement
     </div>
             <h1 class="text-3xl mb-6 font-bold underline">Instucteurs in dienst</h1>
+            <h2 class="text-2xl mb-4">Aantal instructeurs: {{ count($instructeurs) }}</h2>
             
             @if(session('success'))
                 <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 my-4 rounded">
@@ -34,9 +35,9 @@
                                 @for($i = 0; $i < $instructeur->aantal_sterren; $i++)
                                     ⭐
                                 @endfor
-                           
+                            </td>
                             <td class="py-3 px-4">
-                                <a href="" class="py-1 px-2">
+                                <a href="{{ route('instructeur.show', $instructeur->id) }}" class="py-1 px-2">
                                     🚘
                                 </a>
                             </td>

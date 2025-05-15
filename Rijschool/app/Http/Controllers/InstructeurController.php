@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Instructeur;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -14,9 +13,16 @@ class InstructeurController extends Controller
      */
     public function index()
     {
-        // Use the stored procedure to get all instructeurs
         $instructeurs = DB::select('CALL sp_getAllInstructeurs()');
-        
+
+        // Ensure 'id' property exists (in case procedure uses instructeur_id)
+            foreach ($instructeurs as $instructeur) {
+                if (!isset($instructeur->id) && isset($instructeur->instructeur_id)) {
+                    $instructeur->id = $instructeur->instructeur_id;
+                }
+            }
+
+
         return view('instructeur.index', compact('instructeurs'));
     }
 
@@ -33,7 +39,6 @@ class InstructeurController extends Controller
      */
     public function store(Request $request)
     {
-        // Validate the input
         $validator = Validator::make($request->all(), [
             'voornaam' => 'required|string|max:50',
             'tussenvoegsel' => 'nullable|string|max:10',
@@ -49,8 +54,7 @@ class InstructeurController extends Controller
                 ->withInput();
         }
 
-        // Call the stored procedure to create a new instructeur
-        $result = DB::select('CALL sp_createInstructeur(?, ?, ?, ?, ?, ?)', [
+        DB::select('CALL sp_createInstructeur(?, ?, ?, ?, ?, ?)', [
             $request->voornaam,
             $request->tussenvoegsel,
             $request->achternaam,
@@ -66,61 +70,45 @@ class InstructeurController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Instructeur $instructeur)
+    public function show($id)
     {
-        // Get instructor details
-        $instructeurDetails = DB::select('CALL sp_getInstructeurById(?)', [$instructeur->id]);
-        
+        $instructeurDetails = DB::select('CALL sp_getInstructeurById(?)', [$id]);
+
         if (empty($instructeurDetails)) {
             return redirect()->route('instructeur.index')
                 ->with('error', 'Instructeur niet gevonden');
         }
-        
-        $instructeurData = $instructeurDetails[0];
-        
-        // Get vehicles assigned to this instructor
-        $voertuigen = DB::table('voertuigen as v')
-            ->join('type_voertuig as tv', 'v.type_voertuig_id', '=', 'tv.id')
-            ->join('voertuig_instructeurs as vi', 'v.id', '=', 'vi.voertuig_id')
-            ->where('vi.instructeur_id', $instructeur->id)
-            ->where('vi.is_actief', 1)
-            ->select(
-                'tv.type_voertuig',
-                'v.type',
-                'v.kentkenen',
-                'v.bouwjaar',
-                'v.brandstof',
-                'tv.rijbewijscategorie'
-            )
-            ->get();
 
-        return view('instructeur.show', compact('instructeurData', 'voertuigen'));
+        $instructeurData = $instructeurDetails[0];
+
+        // Use stored procedure to get vehicles assigned to this instructor
+        $voertuigen = DB::select('CALL sp_getVoertuigDetails(?)', [$id]);
+
+        return view('instructeur.show', compact('instructeurData', 'voertuigen', 'id'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Instructeur $instructeur)
+    public function edit($id)
     {
-        // Get instructor details using stored procedure
-        $instructeurDetails = DB::select('CALL sp_getInstructeurById(?)', [$instructeur->id]);
-        
+        $instructeurDetails = DB::select('CALL sp_getInstructeurById(?)', [$id]);
+
         if (empty($instructeurDetails)) {
             return redirect()->route('instructeur.index')
                 ->with('error', 'Instructeur niet gevonden');
         }
-        
+
         $instructeurData = $instructeurDetails[0];
-        
+
         return view('instructeur.edit', compact('instructeurData'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Instructeur $instructeur)
+    public function update(Request $request, $id)
     {
-        // Validate the input
         $validator = Validator::make($request->all(), [
             'voornaam' => 'required|string|max:50',
             'tussenvoegsel' => 'nullable|string|max:10',
@@ -131,14 +119,13 @@ class InstructeurController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return redirect()->route('instructeur.edit', $instructeur->id)
+            return redirect()->route('instructeur.edit', $id)
                 ->withErrors($validator)
                 ->withInput();
         }
 
-        // Call the stored procedure to update instructeur
         DB::select('CALL sp_updateInstructeur(?, ?, ?, ?, ?, ?, ?)', [
-            $instructeur->id,
+            $id,
             $request->voornaam,
             $request->tussenvoegsel,
             $request->achternaam,
@@ -154,10 +141,9 @@ class InstructeurController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Instructeur $instructeur)
+    public function destroy($id)
     {
-        // Call stored procedure to delete instructeur (soft delete)
-        DB::select('CALL sp_deleteInstructeur(?)', [$instructeur->id]);
+        DB::select('CALL sp_deleteInstructeur(?)', [$id]);
 
         return redirect()->route('instructeur.index')
             ->with('success', 'Instructeur succesvol verwijderd');

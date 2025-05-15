@@ -17,6 +17,7 @@ return new class extends Migration
             CREATE PROCEDURE sp_getAllInstructeurs()
             BEGIN
                 SELECT
+                    id,
                     voornaam,
                     tussenvoegsel,
                     achternaam,
