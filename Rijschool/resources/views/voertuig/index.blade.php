@@ -4,11 +4,7 @@
     </div>
     <div class="container mt-5">
         <h1 class="text-3xl mb-6 font-bold underline">Alle beschikbare voertuigen</h1>
-        
-        
-        <h2 class="text-2xl mb-4">Naam: </h2>
-        <h2 class="text-2xl mb-4">Datum in dienst: </h2>
-        <h2 class="text-2xl mb-4">Aantal sterren: </h2>
+
         
         @if(session('success'))
             <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 my-4 rounded">
