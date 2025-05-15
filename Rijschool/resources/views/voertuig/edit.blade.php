@@ -24,11 +24,13 @@
                 <select name="type_voertuig_id" id="type_voertuig_id" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                     @foreach($typeVoertuigen as $typeVoertuig)
                         <option value="{{ $typeVoertuig->id }}" {{ ($voertuig->type_voertuig_id ?? null) == $typeVoertuig->id ? 'selected' : '' }}>
-                            {{ $typeVoertuig->rijbewijsCategorie ?? $typeVoertuig->type_naam ?? $typeVoertuig->name ?? 'Type ' . $typeVoertuig->id }}
+                            {{ $typeVoertuig->type_voertuig }}
                         </option>
                     @endforeach
                 </select>
             </div>
+
+            
 
             {{-- Type --}}
             <div class="mb-5">
